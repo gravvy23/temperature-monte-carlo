@@ -30,12 +30,12 @@ server: idl temperature_server.cpp Temperature*.cpp *.c  # .cpp - server files, 
 	temperature_server.cpp Temperature*.cpp *.c \
 	-lOB -lCosNaming -lJTC -ldl -lpthread
 
-client: idl client*.cpp TestImplementation.* # client files
+client: idl temperature_client.cpp TemperatureDataImplementation.* # client files
 	@echo 'Compiling client...'
 	c++ -w -fpermissive \
 	-I. -I$(ORBACUS_DIR)/include -I$(ORBACUS_DIR)/include/JTC \
-	-L$(ORBACUS_DIR)/lib -o client client-naming_service.cpp \
-	TestInterface.cpp -lOB -lCosNaming -lJTC -ldl -lpthread
+	-L$(ORBACUS_DIR)/lib -o client temperature_client.cpp \
+	TemperatureDataInterface.cpp -lOB -lCosNaming -lJTC -ldl -lpthread
 
 clean:  # remove executables and secondary files
 	@echo 'Clearing files...'
