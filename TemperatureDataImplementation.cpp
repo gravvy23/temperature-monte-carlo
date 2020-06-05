@@ -1,6 +1,7 @@
 #include <OB/CORBA.h>
 #include <stdio.h>
 #include "TemperatureDataImplementation.h"
+#include "helpers.h"
 
 //Function calculating temerature in provided position in separate source file
 extern float RandomWalk(int row, int col, float** mesh, float sum, int count);
@@ -10,28 +11,28 @@ extern float RandomWalk(int row, int col, float** mesh, float sum, int count);
 CORBA::Long TemperatureDataImplementation::randomWalk(TemperatureMesh mesh,
                                                       CORBA::ULong row, CORBA::ULong column) throw(CORBA::SystemException)
 {
-    static float** pmesh = NULL;
+    // static float** pmesh = NULL;
 
-    // Mesh length may not change after 1st call (static pointer)
-    if(!pmesh) 
-    {
-        pmesh = new float*[100];
-        for (int i = 0; i < 100; ++i)
-        {
-            pmesh[i] = new float[100];
-        }
-    }
-    for (int i = 0; i < 100; ++i)
-    {
-        for (int j = 0; j < 100; ++j)
-        {
-            // Copy CORBA object fields into generic matrix
-            pmesh[i][j] = mesh[i][j];
-        }
-    }
+    // // Mesh length may not change after 1st call (static pointer)
+    // if(!pmesh) 
+    // {
+    //     pmesh = new float*[NODES];
+    //     for (int i = 0; i < NODES; ++i)
+    //     {
+    //         pmesh[i] = new float[NODES];
+    //     }
+    // }
+    // for (int i = 0; i < NODES; ++i)
+    // {
+    //     for (int j = 0; j < NODES; ++j)
+    //     {
+    //         // Copy CORBA object fields into generic matrix
+    //         pmesh[i][j] = mesh[i][j];
+    //     }
+    // }
 
     //Execute some calculations
-    float newTemperature = RandomWalk((int)row, (int)column, pmesh, 0.0f, 0);
+    float newTemperature = RandomWalk((int)row, (int)column, mesh, 0.0f, 0);
     //save new temperature in original mesh
     mesh[row][column] = newTemperature;
 

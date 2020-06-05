@@ -1,5 +1,5 @@
-typedef float RowType[100];
-typedef RowType TemperatureMesh[100];
+typedef float RowType[20];
+typedef RowType TemperatureMesh[20];
 
 interface TemperatureDataInterface
 {
