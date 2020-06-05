@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 {
     /************************** calc variables ******************************/
     float SIDE_TEMPERATURES[4] = {60.f, 10.f, 60.f, 10.f}; // north, east, south, west
-    const float INIT_TEMP = 0.f;                         // initial temp in nodes, should be always 0
+    const float INIT_TEMP = 0.f;                           // initial temp in nodes, should be always 0
     float MESH[NODES][NODES];
     char *pName;
 
@@ -72,13 +72,20 @@ int main(int argc, char *argv[])
         TemperatureDataInterface_var server =
             TemperatureDataInterface::_narrow(vCorbaObj);
 
-
-        cout << "Before calculations " << MESH[10][10] << "\n";
-        // Execute remote object method call
-        server->randomWalk(MESH,10,10);
-        // Print results received from remote object
-        cout << "After calculations " <<  MESH[10][10] << "\n";
+        /*********************** iteration *************************************/
+        for (int i = 1; i < NODES; ++i)
+        {
+            for (int j = 1; j < NODES; ++j)
+            {
+                cout << "Before calculations " << MESH[i][j] << "\n";
+                // Execute remote object method call
+                server->randomWalk(MESH, i, j);
+                // Print results received from remote object
+                cout << "After calculations " << MESH[i][j] << "\n";
+            }
+        }
     }
+    
     catch (CORBA::SystemException &e)
     {
         cout << "Exception: " << e.reason() << "\n";
