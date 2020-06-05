@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 {
     /************************** calc variables ******************************/
     float SIDE_TEMPERATURES[4] = {60.f, 10.f, 60.f, 10.f}; // north, east, south, west
-    const float INIT_TEMP = 0f;                         // initial temp in nodes, should be always 0
+    const float INIT_TEMP = 0.f;                         // initial temp in nodes, should be always 0
     float MESH[NODES][NODES];
 
     /****************** Initializing values *********************************/
