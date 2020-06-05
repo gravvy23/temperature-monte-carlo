@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
     float SIDE_TEMPERATURES[4] = {60.f, 10.f, 60.f, 10.f}; // north, east, south, west
     const float INIT_TEMP = 0.f;                         // initial temp in nodes, should be always 0
     float MESH[NODES][NODES];
+    char *pName;
 
     /****************** Initializing values *********************************/
     for (int i = 0; i < NODES; i++)
@@ -41,12 +42,8 @@ int main(int argc, char *argv[])
             }
         }
     }
-    // prepare data structures
-    char *pName;
-    float Sum;
-    CORBA::Float &pSum(Sum);
 
-    if (argc < 3)
+    if (argc < 2)
     {
         cout << "Usage: " << argv[0]
              << " <server_name> -ORBnaming <IOR> "
