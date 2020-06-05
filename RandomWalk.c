@@ -10,6 +10,7 @@ int isBoundary(int i, int j)
 
 float RandomWalk(int i, int j, float** mesh, float sum, int count)
 {
+    srand(i + j + count);
     sum += mesh[i][j];
     count++;
     if (isBoundary(i, j))

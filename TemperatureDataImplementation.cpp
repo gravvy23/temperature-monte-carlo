@@ -1,7 +1,6 @@
 #include <OB/CORBA.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h> 
 #include "TemperatureDataImplementation.h"
 #include "helpers.h"
 
@@ -34,7 +33,6 @@ CORBA::Long TemperatureDataImplementation::randomWalk(TemperatureMesh mesh,
     }
 
     //Execute some calculations
-    srand (time(NULL));
     float newTemperature = RandomWalk((int)row, (int)column, pmesh, 0.0f, 0);
     //save new temperature in original mesh
     mesh[row][column] = newTemperature;

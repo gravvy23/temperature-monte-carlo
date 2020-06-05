@@ -37,6 +37,10 @@ client: idl temperature_client.cpp TemperatureDataImplementation.* # client file
 	-L$(ORBACUS_DIR)/lib -o client temperature_client.cpp \
 	TemperatureDataInterface.cpp helpers.cpp -lOB -lCosNaming -lJTC -ldl -lpthread
 
+
+gnuplot: 
+	gnuplot plot.p
+	
 clean:  # remove executables and secondary files
 	@echo 'Clearing files...'
 	rm -f server client *Interface*.cpp *Interface*.h
