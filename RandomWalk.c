@@ -9,7 +9,7 @@ int isBoundary(int i, int j)
 }
 
 
-float RandomWalk(int i, int j, float** mesh, double sum, int count)
+float RandomWalk(int i, int j, float** mesh, float sum, int count)
 {
     sum += mesh[i][j];
     count++;
