@@ -22,12 +22,12 @@ idl:    TemperatureDataInterface.idl  # create C++ interfaces from IDL file
 	@echo 'Creating CORBA interfaces...'
 	LD_LIBRARY_PATH=$(LIB_PATH) $(ORBACUS_DIR)/bin/idl TemperatureDataInterface.idl
 
-server: idl server*.cpp Test*.cpp *.c  # .cpp - server files, .c - solution
+server: idl temperature_server.cpp Temperature*.cpp *.c  # .cpp - server files, .c - solution
 	@echo 'Compiling server...'
 	c++ -w -fpermissive \
 	-I. -I$(ORBACUS_DIR)/include \
 	-L$(ORBACUS_DIR)/lib -o server \
-	server-naming_service.cpp Test*.cpp *.c \
+	temperature_server.cpp Temperature*.cpp *.c \
 	-lOB -lCosNaming -lJTC -ldl -lpthread
 
 client: idl client*.cpp TestImplementation.* # client files
