@@ -1,7 +1,0 @@
-typedef sequence<float> xVector;
-interface TestInterface
-{
-	long  PowerVecWrapper( 	inout xVector vector,
-				in    float   Power,
-				out   float   Sum );
-};

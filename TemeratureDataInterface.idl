@@ -1,0 +1,8 @@
+typedef float RowType[100];
+typedef RowType TemperatureMesh[100];
+
+interface TemperatureDataInterface
+{
+	long  randomWalk( 	inout TemperatureMesh mesh,
+				in    unsigned long   position);
+};
