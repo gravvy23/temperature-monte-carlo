@@ -73,10 +73,11 @@ int main(int argc, char *argv[])
             TemperatureDataInterface::_narrow(vCorbaObj);
 
 
+        cout << "Before calculations " << MESH[10][10] << "\n";
         // Execute remote object method call
         server->randomWalk(MESH,10,10);
         // Print results received from remote object
-        cout << "After calculations " << "\n";
+        cout << "After calculations " <<  MESH[10][10] << "\n";
     }
     catch (CORBA::SystemException &e)
     {
