@@ -4,6 +4,6 @@
 #define NODES 100
 #define ERROR 0.0001
 
-float calcAvg(float** mesh);
+float calcAvg(float mesh[][NODES]);
 
 #endif
