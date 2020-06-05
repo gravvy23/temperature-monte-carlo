@@ -3,7 +3,7 @@
 #include <iostream>
 #include <iomanip>
 #include "TemperatureDataInterface.h"
-#define NODES 100
+#include "helpers.h"
 
 using namespace std;
 
@@ -14,6 +14,7 @@ int main(int argc, char *argv[])
     const float INIT_TEMP = 0.f;                           // initial temp in nodes, should be always 0
     float MESH[NODES][NODES];
     char *pName;
+    float average, tmp_avg, err;
 
     /****************** Initializing values *********************************/
     for (int i = 0; i < NODES; i++)
@@ -42,7 +43,9 @@ int main(int argc, char *argv[])
             }
         }
     }
+    tmp_avg = calcAvg(MESH);
 
+    /****************** check args validity *********************************/
     if (argc < 2)
     {
         cout << "Usage: " << argv[0]
@@ -72,20 +75,27 @@ int main(int argc, char *argv[])
         TemperatureDataInterface_var server =
             TemperatureDataInterface::_narrow(vCorbaObj);
 
-        /*********************** iteration *************************************/
-        for (int i = 1; i < NODES; ++i)
+        /*********************** main calculations *************************************/
+        do
         {
-            for (int j = 1; j < NODES; ++j)
+            average = tmp_avg;
+            /*********************** iteration *************************************/
+            for (int i = 1; i < NODES - 1; ++i)
             {
-                cout << "Before calculations " << MESH[i][j] << "\n";
-                // Execute remote object method call
-                server->randomWalk(MESH, i, j);
-                // Print results received from remote object
-                cout << "After calculations " << MESH[i][j] << "\n";
+                for (int j = 1; j < NODES - 1; ++j)
+                {
+                    // cout << "Before calculations " << MESH[i][j] << "\n";
+                    // Execute remote object method call
+                    server->randomWalk(MESH, i, j);
+                    // cout << "After calculations " << MESH[i][j] << "\n";
+                }
             }
-        }
+            tmp_avg = calcAvg(MESH);
+            err = fabs(average - tmp_avg);
+            cout << "ERROR: " << err << "\n";
+        } while (err > ERROR);
     }
-    
+
     catch (CORBA::SystemException &e)
     {
         cout << "Exception: " << e.reason() << "\n";
