@@ -3,6 +3,6 @@ typedef RowType TemperatureMesh[50];
 
 interface TemperatureDataInterface
 {
-	long  randomWalk( 	inout TemperatureMesh mesh,
+	float  randomWalk( 	inout TemperatureMesh mesh,
 				in    unsigned long   row, in unsigned long column);
 };

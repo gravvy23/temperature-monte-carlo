@@ -7,5 +7,5 @@ class TemperatureDataImplementation : public POA_TemperatureDataInterface,
                                       public PortableServer::RefCountServantBase
 {
 public:
-    virtual CORBA::Long randomWalk(TemperatureMesh mesh, CORBA::ULong row, CORBA::ULong column) throw(CORBA::SystemException);
+    virtual CORBA::Float randomWalk(TemperatureMesh mesh, CORBA::ULong row, CORBA::ULong column) throw(CORBA::SystemException);
 };

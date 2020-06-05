@@ -9,6 +9,7 @@
 using namespace std;
 
 float MESH[NODES][NODES];
+float TEMP_MESH[NODES][NODES];
 JTCMutex MeshMutex;
 JTCMonitor MeshMonitor;
 
@@ -48,7 +49,7 @@ int main(int argc, char *argv[])
         }
     }
     tmp_avg = calcAvg(MESH);
-
+    copyMesh(TEMP_MESH, MESH);
     /****************** check args validity *********************************/
     if (argc < 2)
     {
@@ -90,10 +91,11 @@ int main(int argc, char *argv[])
                 {
                     // cout << "Before calculations " << MESH[i][j] << "\n";
                     // Execute remote object method call
-                    server->randomWalk(MESH, i, j);
+                    TEMP_MESH[i][j] = server->randomWalk(MESH, i, j);
                     // cout << "After calculations " << MESH[i][j] << "\n";
                 }
             }
+            copyMesh(MESH, TEMP_MESH);
             tmp_avg = calcAvg(MESH);
             err = fabs(average - tmp_avg);
             cout << "ERROR: " << err << "\n";

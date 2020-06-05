@@ -32,3 +32,15 @@ void saveToFile(float mesh[][NODES])
         fclose(fptr);
     }
 }
+
+void copyMesh(float mesh[][NODES], float meshToCopy[][NODES])
+{
+    for (int i = 1; i < NODES - 1; ++i)
+    {
+        for (int j = 1; j < NODES - 1; ++j)
+        {
+
+            mesh[i][j] = meshToCopy[i][j];
+        }
+    }
+}
