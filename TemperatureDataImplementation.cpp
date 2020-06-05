@@ -14,7 +14,7 @@ extern int CalcCols(unsigned long position);
 // Implementation of C++ class method (based on prototype from the header file)
 // mesh is being transferred by reference (changes returned)
 CORBA::Long TemperatureDataImplementation::randomWalk(TemperatureMesh &mesh,
-                                                      ::CORBA::ULong position) throw(CORBA::SystemException)
+                                                      CORBA::ULong position) throw(CORBA::SystemException)
 {
     static float** pmesh = NULL;
     int row = CalcRows(position);
