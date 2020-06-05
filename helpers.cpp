@@ -1,7 +1,7 @@
 #include <iostream>
 #include "helpers.h"
 
-float calcAvg(float** mesh) 
+float calcAvg(float mesh[][NODES])
 {
     float sum = 0.0f;
     for (int i = 0; i < NODES; ++i)

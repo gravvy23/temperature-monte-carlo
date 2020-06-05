@@ -2,6 +2,7 @@
 #include <OB/CosNaming.h>
 #include <iostream>
 #include <iomanip>
+#include <math.h>
 #include "TemperatureDataInterface.h"
 #include "helpers.h"
 

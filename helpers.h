@@ -5,3 +5,5 @@
 #define ERROR 0.0001
 
 float calcAvg(float** mesh);
+
+#endif
