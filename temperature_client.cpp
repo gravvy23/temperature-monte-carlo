@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
 
 
         // Execute remote object method call
-        server->randomWalk(MESH,300);
+        server->randomWalk(MESH,10,10);
         // Print results received from remote object
         cout << "After calculations " << "\n";
     }
