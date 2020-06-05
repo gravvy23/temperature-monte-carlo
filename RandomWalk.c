@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-int NODES = 100;
+#include "helpers.h"
 
 int isBoundary(int i, int j)
 {
