@@ -15,7 +15,7 @@ JTCMonitor MeshMonitor;
 int main(int argc, char *argv[])
 {
     /************************** calc variables ******************************/
-    float SIDE_TEMPERATURES[4] = {60.f, 10.f, 60.f, 10.f}; // north, east, south, west
+    float SIDE_TEMPERATURES[4] = {60.f, 60.f, 10.f, 10.f}; // north, east, south, west
     const float INIT_TEMP = 0.f;                           // initial temp in nodes, should be always 0
     char *pName;
     float average, tmp_avg, err;

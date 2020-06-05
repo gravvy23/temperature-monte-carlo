@@ -8,9 +8,9 @@ int isBoundary(int i, int j)
 }
 
 
-float RandomWalk(int i, int j, float** mesh, float sum, int count)
+float RandomWalk(int i, int j, float** mesh, float sum, int count, long counter)
 {
-    srand(i + j + count);
+    srand((count+1)*(counter+1));
     sum += mesh[i][j];
     count++;
     if (isBoundary(i, j))
@@ -20,15 +20,15 @@ float RandomWalk(int i, int j, float** mesh, float sum, int count)
     int direction = rand() % 4;
     if (direction == 0) //north
     {
-        return RandomWalk(j + 1, i, mesh, sum, count);
+        return RandomWalk(j + 1, i, mesh, sum, count, counter);
     }
     if (direction == 1) //east
     {
-        return RandomWalk(j, i + 1, mesh, sum, count);
+        return RandomWalk(j, i + 1, mesh, sum, count, counter);
     }
     if (direction == 2) //south
     {
-        return RandomWalk(j - 1, i, mesh, sum, count);
+        return RandomWalk(j - 1, i, mesh, sum, count, counter);
     }
-    return RandomWalk(j, i - 1, mesh, sum, count);
+    return RandomWalk(j, i - 1, mesh, sum, count, counter);
 };

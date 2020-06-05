@@ -5,7 +5,7 @@
 #include "helpers.h"
 
 //Function calculating temerature in provided position in separate source file
-extern float RandomWalk(int row, int col, float** mesh, float sum, int count);
+extern float RandomWalk(int row, int col, float** mesh, float sum, int count, long counter);
 
 // Implementation of C++ class method (based on prototype from the header file)
 // mesh is being transferred by reference (changes returned)
@@ -13,7 +13,7 @@ CORBA::Long TemperatureDataImplementation::randomWalk(TemperatureMesh mesh,
                                                       CORBA::ULong row, CORBA::ULong column) throw(CORBA::SystemException)
 {
     static float** pmesh = NULL;
-
+    static long counter = 0;
     // Mesh length may not change after 1st call (static pointer)
     if(!pmesh) 
     {
@@ -33,7 +33,8 @@ CORBA::Long TemperatureDataImplementation::randomWalk(TemperatureMesh mesh,
     }
 
     //Execute some calculations
-    float newTemperature = RandomWalk((int)row, (int)column, pmesh, 0.0f, 0);
+    float newTemperature = RandomWalk((int)row, (int)column, pmesh, 0.0f, 0, counter);
+    counter++;
     //save new temperature in original mesh
     mesh[row][column] = newTemperature;
 
