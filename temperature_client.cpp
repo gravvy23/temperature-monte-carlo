@@ -95,6 +95,9 @@ int main(int argc, char *argv[])
             err = fabs(average - tmp_avg);
             cout << "ERROR: " << err << "\n";
         } while (err > ERROR);
+
+        //save data to output file
+        saveToFile(MESH);
     }
 
     catch (CORBA::SystemException &e)
