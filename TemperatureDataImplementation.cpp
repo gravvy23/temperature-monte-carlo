@@ -40,7 +40,7 @@ CORBA::Long TemperatureDataImplementation::randomWalk(TemperatureMesh mesh,
 
     //Execute some calculations
     float newTemperature = RandomWalk(row, col, pmesh, (float)0.0, 0);
-
+    std::cout << "Server output" << newTemperature << "\n";
     //save new temperature in original mesh
     mesh[row][col] = newTemperature;
 
