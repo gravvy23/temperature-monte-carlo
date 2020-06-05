@@ -35,7 +35,7 @@ client: idl temperature_client.cpp TemperatureDataImplementation.* # client file
 	c++ -w -fpermissive \
 	-I. -I$(ORBACUS_DIR)/include -I$(ORBACUS_DIR)/include/JTC \
 	-L$(ORBACUS_DIR)/lib -o client temperature_client.cpp \
-	TemperatureDataInterface.cpp -lOB -lCosNaming -lJTC -ldl -lpthread
+	TemperatureDataInterface.cpp helpers.cpp -lOB -lCosNaming -lJTC -ldl -lpthread
 
 clean:  # remove executables and secondary files
 	@echo 'Clearing files...'
