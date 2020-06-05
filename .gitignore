@@ -1,6 +1,11 @@
-TemeratureDataInterface_skel.cpp
-TemeratureDataInterface_skel.h
-TemeratureDataInterface.cpp
-TemeratureDataInterface.h
+TemperatureDataInterface_skel.cpp
+TemperatureDataInterface_skel.h
+TemperatureDataInterface.cpp
+TemperatureDataInterface.h
 
 .vscode
+
+server
+client
+
+dane.txt
