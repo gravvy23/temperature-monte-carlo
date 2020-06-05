@@ -18,9 +18,9 @@ all:  idl server client  # make all and strip executables to reduce their size
 	@echo -e "Start Client:\n LD_LIBRARY_PATH=$(LIB_PATH) ./client -ORBnaming corbaloc:iiop:<host>:<port>/NameService <server_name> <power>"
 
 
-idl:    TestInterface.idl  # create C++ interfaces from IDL file
+idl:    TemperatureDataInterface.idl  # create C++ interfaces from IDL file
 	@echo 'Creating CORBA interfaces...'
-	LD_LIBRARY_PATH=$(LIB_PATH) $(ORBACUS_DIR)/bin/idl TestInterface.idl
+	LD_LIBRARY_PATH=$(LIB_PATH) $(ORBACUS_DIR)/bin/idl TemperatureDataInterface.idl
 
 server: idl server*.cpp Test*.cpp *.c  # .cpp - server files, .c - solution
 	@echo 'Compiling server...'
