@@ -133,57 +133,5 @@ int main(int argc, char *argv[])
     //save data to output file
     cout << "HERE";
     saveToFile(MESH);
-    // try
-    // {
-    //     // Initialize client ORB
-    //     CORBA::ORB_var vOrb = CORBA::ORB_init(argc, argv);
-    //     // Locate Name Service
-    //     CORBA::Object_var vObject =
-    //         vOrb->resolve_initial_references("NameService");
-    //     CosNaming::NamingContext_var vNamingContext =
-    //         CosNaming::NamingContext::_narrow(vObject);
-    //     // Prepare object with "server name" query
-    //     CosNaming::Name implName;
-    //     implName.length(1);
-    //     pName = argv[1];
-    //     implName[0].id = CORBA::string_dup(pName);
-    //     implName[0].kind = CORBA::string_dup("");
-    //     // Get remote object reference from Name Service
-    //     CORBA::Object_var vCorbaObj =
-    //         vNamingContext->resolve(implName);
-    //     TemperatureDataInterface_var server =
-    //         TemperatureDataInterface::_narrow(vCorbaObj);
-
-    //     /*********************** main calculations *************************************/
-    //     do
-    //     {
-    //         average = tmp_avg;
-    //         /*********************** iteration *************************************/
-    //         for (int i = 1; i < NODES - 1; ++i)
-    //         {
-    //             for (int j = 1; j < NODES - 1; ++j)
-    //             {
-    //                 // cout << "Before calculations " << MESH[i][j] << "\n";
-    //                 // Execute remote object method call
-    //                 TEMP_MESH[i][j] = server->randomWalk(MESH, i, j);
-    //                 // cout << "After calculations " << MESH[i][j] << "\n";
-    //             }
-    //         }
-    //         copyMesh(MESH, TEMP_MESH);
-    //         tmp_avg = calcAvg(MESH);
-    //         err = fabs(average - tmp_avg);
-    //         cout << "ERROR: " << err << "\n";
-    //     } while (err > ERROR);
-
-    //     //save data to output file
-    //     saveToFile(MESH);
-    // }
-
-    // catch (CORBA::SystemException &e)
-    // {
-    //     cout << "Exception: " << e.reason() << "\n";
-    //     return 1;
-    // }
-
     return 0;
 }
