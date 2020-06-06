@@ -7,7 +7,7 @@ ORBACUS_DIR = /opt/nfs/corba/OB
 JTC_DIR     = $(ORBACUS_DIR)/jtc
 LIB_PATH    = $(ORBACUS_DIR)/lib
 
-all:  idl server client gnuplot # make all and strip executables to reduce their size
+all:  idl server client # make all and strip executables to reduce their size
 	@echo 'Stripping executables...'
 	strip server
 	strip client
