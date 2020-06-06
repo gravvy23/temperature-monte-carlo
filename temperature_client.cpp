@@ -37,7 +37,6 @@ class SideThread : public JTCThread
     char *pName;
     int startRow;
     int endRow;
-    CORBA::ORB_var vOrb;
     TemperatureDataInterface_var server;
 
     void waitForOthers()
@@ -56,9 +55,8 @@ class SideThread : public JTCThread
     }
 
 public:
-    SideThread(char *pName, int startRow, int endRow, CORBA::ORB_var vOrb) : pName(pName), startRow(startRow), endRow(endRow), vOrb(vOrb)
+    SideThread(int startRow, int endRow, TemperatureDataInterface_var server) : startRow(startRow), endRow(endRow), server(server)
     {
-        server = openServer(pName, vOrb);
     }
 
     virtual void run()
@@ -83,6 +81,7 @@ int main(int argc, char *argv[])
     float SIDE_TEMPERATURES[4] = {60.f, 60.f, 10.f, 10.f}; // north, east, south, west
     float average, tmp_avg, err;
     JTCThread *pThread1, *pThread2;
+    TemperatureDataInterface_var server1, server2;
 
     /****************** Initializing values *********************************/
     JTCInitialize initialize;
@@ -101,6 +100,8 @@ int main(int argc, char *argv[])
     try
     {
         vOrb = CORBA::ORB_init(argc, argv);
+        server1 = openServer(argv[1], vOrb);
+        server2 = openServer(argv[2], vOrb);
     }
     catch (CORBA::SystemException &e)
     {
@@ -111,8 +112,8 @@ int main(int argc, char *argv[])
     {
         average = tmp_avg;
 
-        pThread1 = new SideThread(argv[1], 1, NODES / 2, vOrb);
-        pThread2 = new SideThread(argv[2], NODES / 2 + 1, NODES - 1, vOrb);
+        pThread1 = new SideThread(1, NODES / 2, server1);
+        pThread2 = new SideThread(NODES / 2 + 1, NODES - 1, server2);
         pThread2->start();
         pThread1->start();
         try
