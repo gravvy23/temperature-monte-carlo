@@ -4,6 +4,7 @@ TemperatureDataInterface.cpp
 TemperatureDataInterface.h
 
 .vscode
+.DS_store
 
 server
 client

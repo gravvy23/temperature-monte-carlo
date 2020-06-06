@@ -11,4 +11,6 @@ void saveToFile(float mesh[][NODES]);
 
 void copyMesh(float mesh[][NODES], float meshToCopy[][NODES]);
 
+void initMesh(float mesh[][NODES], float SIDE_TEMPERATURES[]);
+
 #endif
