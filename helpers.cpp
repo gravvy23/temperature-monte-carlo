@@ -44,3 +44,33 @@ void copyMesh(float mesh[][NODES], float meshToCopy[][NODES])
         }
     }
 }
+
+void initMesh(float mesh[][NODES], float SIDE_TEMPERATURES[])
+{
+ for (int i = 0; i < NODES; i++)
+    {
+        for (int j = 0; j < NODES; j++)
+        {
+            if (i == 0) // south
+            {
+                mesh[i][j] = SIDE_TEMPERATURES[2];
+            }
+            else if (j == 0) //west
+            {
+                mesh[i][j] = SIDE_TEMPERATURES[3];
+            }
+            else if (i == NODES - 1) // east
+            {
+                mesh[i][j] = SIDE_TEMPERATURES[1];
+            }
+            else if (j == NODES - 1) // north
+            {
+                mesh[i][j] = SIDE_TEMPERATURES[0];
+            }
+            else //interior
+            {
+                mesh[i][j] = 0.0f;
+            }
+        }
+    }
+}
