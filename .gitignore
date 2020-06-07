@@ -4,9 +4,13 @@ src/TemperatureDataInterface.cpp
 src/TemperatureDataInterface.h
 
 .vscode
+<<<<<<< HEAD
 docs/.DS_Store
 src/.DS_Store
 .DS_Store
+=======
+.DS_store
+>>>>>>> 974def612b43d72fe98a0136456bf7ba90091679
 
 src/server
 src/client

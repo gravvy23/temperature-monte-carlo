@@ -6,8 +6,9 @@
 ORBACUS_DIR = /opt/nfs/corba/OB
 JTC_DIR     = $(ORBACUS_DIR)/jtc
 LIB_PATH    = $(ORBACUS_DIR)/lib
+PORT 		= 3456
 
-all:  idl server client  # make all and strip executables to reduce their size
+all:  idl server client # make all and strip executables to reduce their size
 	@echo 'Stripping executables...'
 	strip server
 	strip client
@@ -15,7 +16,7 @@ all:  idl server client  # make all and strip executables to reduce their size
 	@ls -l --color server client
 	@echo -e "Start Naming Service:\n LD_LIBRARY_PATH=$(LIB_PATH) $(ORBACUS_DIR)/bin/nameserv -OAport <port> &"
 	@echo -e "Start Server:\n LD_LIBRARY_PATH=$(LIB_PATH) ./server -ORBnaming corbaloc:iiop:<host>:<port>/NameService <server_name> &"
-	@echo -e "Start Client:\n LD_LIBRARY_PATH=$(LIB_PATH) ./client -ORBnaming corbaloc:iiop:<host>:<port>/NameService <server_name> <power>"
+	@echo -e "Start Client:\n LD_LIBRARY_PATH=$(LIB_PATH) ./client -ORBnaming corbaloc:iiop:<host>:<port>/NameService <server_name> <server_name>"
 
 
 idl:    TemperatureDataInterface.idl  # create C++ interfaces from IDL file
@@ -38,8 +39,18 @@ client: idl temperature_client.cpp TemperatureDataImplementation.* # client file
 	TemperatureDataInterface.cpp helpers.cpp -lOB -lCosNaming -lJTC -ldl -lpthread
 
 
+runserver:
+	LD_LIBRARY_PATH=$(LIB_PATH) $(ORBACUS_DIR)/bin/nameserv -OAport $(PORT) &
+	LD_LIBRARY_PATH=$(LIB_PATH) ./server -ORBnaming corbaloc:iiop:localhost:$(PORT)/NameService server1 &
+	LD_LIBRARY_PATH=$(LIB_PATH) ./server -ORBnaming corbaloc:iiop:localhost:$(PORT)/NameService server2 &
+	
+runclient:
+	LD_LIBRARY_PATH=$(LIB_PATH) ./client -ORBnaming corbaloc:iiop:localhost:$(PORT)/NameService server1 server2
+
 gnuplot: 
 	gnuplot plot.p
+
+runapp: runclient gnuplot
 	
 clean:  # remove executables and secondary files
 	@echo 'Clearing files...'

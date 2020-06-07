@@ -13,103 +13,126 @@ float TEMP_MESH[NODES][NODES];
 JTCMutex MeshMutex;
 JTCMonitor MeshMonitor;
 
+TemperatureDataInterface_var openServer(char *pName, CORBA::ORB_var vOrb)
+{
+    // Locate Name Service
+    CORBA::Object_var vObject =
+        vOrb->resolve_initial_references("NameService");
+    CosNaming::NamingContext_var vNamingContext =
+        CosNaming::NamingContext::_narrow(vObject);
+    // Prepare object with "server name" query
+    CosNaming::Name implName;
+    implName.length(1);
+    implName[0].id = CORBA::string_dup(pName);
+    implName[0].kind = CORBA::string_dup("");
+    // Get remote object reference from Name Service
+    CORBA::Object_var vCorbaObj =
+        vNamingContext->resolve(implName);
+    return TemperatureDataInterface::_narrow(vCorbaObj);
+}
+
+class SideThread : public JTCThread
+{
+    static int stoppedCount;
+    char *pName;
+    int startRow;
+    int endRow;
+    TemperatureDataInterface_var server;
+
+    void waitForOthers()
+    {
+        JTCSynchronized sync(MeshMonitor);
+        stoppedCount++;
+        if (stoppedCount == 2)
+        {
+            stoppedCount = 0;
+            MeshMonitor.notify();
+        }
+        else
+        {
+            MeshMonitor.wait();
+        }
+    }
+
+public:
+    SideThread(int startRow, int endRow, TemperatureDataInterface_var server) : startRow(startRow), endRow(endRow), server(server)
+    {
+    }
+
+    virtual void run()
+    {
+        /*********************** iteration *************************************/
+        for (int i = startRow; i <= endRow; ++i)
+        {
+            for (int j = 1; j < NODES - 1; ++j)
+            {
+                MeshMutex.lock();
+                TEMP_MESH[i][j] = server->randomWalk(MESH, i, j);
+                MeshMutex.unlock();
+            }
+        }
+        waitForOthers();
+    }
+};
+int SideThread::stoppedCount = 0;
 int main(int argc, char *argv[])
 {
     /************************** calc variables ******************************/
     float SIDE_TEMPERATURES[4] = {60.f, 60.f, 10.f, 10.f}; // north, east, south, west
-    const float INIT_TEMP = 0.f;                           // initial temp in nodes, should be always 0
-    char *pName;
     float average, tmp_avg, err;
+    JTCThread *pThread1, *pThread2;
+    TemperatureDataInterface_var server1, server2;
 
     /****************** Initializing values *********************************/
-    for (int i = 0; i < NODES; i++)
-    {
-        for (int j = 0; j < NODES; j++)
-        {
-            if (i == 0) // south
-            {
-                MESH[i][j] = SIDE_TEMPERATURES[2];
-            }
-            else if (j == 0) //west
-            {
-                MESH[i][j] = SIDE_TEMPERATURES[3];
-            }
-            else if (i == NODES - 1) // east
-            {
-                MESH[i][j] = SIDE_TEMPERATURES[1];
-            }
-            else if (j == NODES - 1) // north
-            {
-                MESH[i][j] = SIDE_TEMPERATURES[0];
-            }
-            else //interior
-            {
-                MESH[i][j] = INIT_TEMP;
-            }
-        }
-    }
+    JTCInitialize initialize;
+    initMesh(MESH, SIDE_TEMPERATURES);
     tmp_avg = calcAvg(MESH);
     copyMesh(TEMP_MESH, MESH);
     /****************** check args validity *********************************/
-    if (argc < 2)
+    if (argc < 3)
     {
         cout << "Usage: " << argv[0]
-             << " <server_name> -ORBnaming <IOR> "
+             << " <server_name1> <server_name2>"
              << "\n";
         return 1;
     }
-
+    CORBA::ORB_var vOrb;
     try
     {
-        // Initialize client ORB
-        CORBA::ORB_var vOrb = CORBA::ORB_init(argc, argv);
-        // Locate Name Service
-        CORBA::Object_var vObject =
-            vOrb->resolve_initial_references("NameService");
-        CosNaming::NamingContext_var vNamingContext =
-            CosNaming::NamingContext::_narrow(vObject);
-        // Prepare object with "server name" query
-        CosNaming::Name implName;
-        implName.length(1);
-        pName = argv[1];
-        implName[0].id = CORBA::string_dup(pName);
-        implName[0].kind = CORBA::string_dup("");
-        // Get remote object reference from Name Service
-        CORBA::Object_var vCorbaObj =
-            vNamingContext->resolve(implName);
-        TemperatureDataInterface_var server =
-            TemperatureDataInterface::_narrow(vCorbaObj);
-
-        /*********************** main calculations *************************************/
-        do
-        {
-            average = tmp_avg;
-            /*********************** iteration *************************************/
-            for (int i = 1; i < NODES - 1; ++i)
-            {
-                for (int j = 1; j < NODES - 1; ++j)
-                {
-                    // cout << "Before calculations " << MESH[i][j] << "\n";
-                    // Execute remote object method call
-                    TEMP_MESH[i][j] = server->randomWalk(MESH, i, j);
-                    // cout << "After calculations " << MESH[i][j] << "\n";
-                }
-            }
-            copyMesh(MESH, TEMP_MESH);
-            tmp_avg = calcAvg(MESH);
-            err = fabs(average - tmp_avg);
-            cout << "ERROR: " << err << "\n";
-        } while (err > ERROR);
-
-        //save data to output file
-        saveToFile(MESH);
+        vOrb = CORBA::ORB_init(argc, argv);
+        server1 = openServer(argv[1], vOrb);
+        server2 = openServer(argv[2], vOrb);
     }
-
     catch (CORBA::SystemException &e)
     {
-        cout << "Exception: " << e.reason() << "\n";
         return 1;
     }
 
+    do
+    {
+        average = tmp_avg;
+
+        pThread1 = new SideThread(1, NODES / 2, server1);
+        pThread2 = new SideThread(NODES / 2 + 1, NODES - 1, server2);
+        pThread2->start();
+        pThread1->start();
+        try
+        {
+            pThread1->join();
+            pThread2->join();
+        }
+        catch (...)
+        {
+        }
+
+        copyMesh(MESH, TEMP_MESH);
+        tmp_avg = calcAvg(MESH);
+        err = fabs(average - tmp_avg);
+        cout << "ERROR: " << err << "\n";
+    } while (err > ERROR);
+
+    //save data to output file
+    cout << "HERE";
+    saveToFile(MESH);
     return 0;
 }
